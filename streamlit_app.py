@@ -210,15 +210,14 @@ else:
                     st.success(f"Ditemukan {len(df_rekomendasi)} lowongan yang cocok!")
                     
                     for _, row in df_rekomendasi.iterrows():
-                        with st.expander(f"✨ Score: {row.get('similarity_score', 0):.2f} | {row['judul']} - {row['perusahaan']}"):
-                            st.write(f"📍 **Lokasi:** {row['provinsi']}")
-                            st.write(f"💰 **Gaji:** Rp {row['gaji_min']:,.0f} - {row['gaji_max']:,.0f}")
-                            st.write(f"🛠️ **Skills:** {row['skills']}")
+                        with st.expander(f"✨ Score: {row.get('similarity_score', 0):.2f} | {row['Judul']} - {row['Perusahaan']}"):
+                            st.write(f"📍 **Lokasi:** {row['Provinsi']}")
+                            st.write(f"💰 **Gaji:** Rp {row['Gaji_Min']:,.0f} - {row['Gaji_Max']:,.0f}")
+                            st.write(f"🛠️ **Skills:** {row['Skills']}")
                             st.divider()
-                            # Gunakan cara replace \n yang kita bahas tadi agar rapi
-                            desc = row['deskripsi'].replace("\n", "  \n")
+                            desc = row['Deskripsi'].replace("\n", "  \n")
                             st.markdown(f"**Deskripsi:** \n{desc}")
-                            st.markdown(f"[🔗 Buka Link Lowongan]({row['link']})")
+                            st.markdown(f"[🔗 Buka Link Lowongan]({row['Link']})")
                 else:
                     st.error("Gagal mendapatkan rekomendasi.")
                 
