@@ -93,6 +93,17 @@ def init_db():
             UNIQUE(user_id, job_id)    -- 1 user hanya 1 feedback per lowongan
         )
     """)
+    
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS file_address (
+            id           TEXT PRIMARY KEY,
+            path         TEXT NOT NULL,
+            user_pemilik TEXT NOT NULL,
+            uploaded_at  TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_pemilik) REFERENCES users(user_id),
+            UNIQUE(user_pemilik, path)  -- 1 user bisa upload banyak file, tapi path harus unik
+        )
+    """)
 
     # Insert 5 user static (skip jika sudah ada)
     static_users = [
@@ -110,7 +121,6 @@ def init_db():
     conn.commit() 
     conn.close()  
     print("✅ Database siap!")
-
 
 def import_jobs_dari_csv(csv_path: str):
     """Import data lowongan dari CSV ke tabel jobs"""
@@ -214,5 +224,30 @@ def get_semua_feedback() -> pd.DataFrame:
     conn.close()
     return df
 
+def save_path_file(path_file:str, user_id:str):
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("""
+        INSERT OR IGNORE INTO file_address (id, path, user_pemilik) 
+        VALUES (?, ?, ?)  
+    """, (
+        str(uuid.uuid4()),
+        path_file,
+        user_id
+    ))
+    conn.commit()
+    conn.close()
+    
+def get_all_file_address() -> pd.DataFrame:
+    conn = sqlite3.connect(DB_PATH)
+    df   = pd.read_sql("SELECT * FROM file_address", conn)
+    conn.close()
+    return df
+
+def get_file_address_by_user(user_id:str) -> pd.DataFrame:
+    conn = sqlite3.connect(DB_PATH)
+    df   = pd.read_sql("SELECT * FROM file_address WHERE user_pemilik = ?", conn, params=(user_id,))
+    conn.close()
+    return df
+
 init_db()
-import_jobs_dari_csv("../glints_jobs_detail_clean.csv")
+# import_jobs_dari_csv("../glints_jobs_detail_clean.csv")

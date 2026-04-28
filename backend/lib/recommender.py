@@ -6,7 +6,7 @@ import os
 # Mengambil folder tempat script ini berada
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-EMBEDD_LOKER_PATH = os.path.join(BASE_DIR, "data_embedd_loker", "job_embeddings.npy")
+EMBEDD_LOKER_PATH = os.path.join(BASE_DIR, "..", "data_embedd_loker", "job_embeddings.npy")
 DATA_MENTAH_CSV_PATH = os.path.join(BASE_DIR, "..", "..", "glints_jobs_detail_clean.csv")
 
 # Load model sekali saja saat startup (Singleton pattern)
